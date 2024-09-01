@@ -1,0 +1,280 @@
+from tkinter import *
+
+import tkinter.font
+
+import tkinter.ttk as ttk
+
+import tkinter as tk
+from tkinter 
+import StringVar
+from tkinter 
+import messagebox
+import 
+
+mysql.connector
+
+root=tk.Tk()
+
+alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
+
+            'v', 'w', 'x', 'y', 'z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+
+            'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+
+
+s = {}
+s['a'] = 'f'
+s['b'] = 'l'
+s['c'] = 'n'
+s['d'] = 'p'
+s['e'] = 'g'
+s['f'] = 'q'
+s['g'] = 'm'
+s['h'] = 'b'
+s['i'] = 'i'
+s['j'] = 's'
+s['k'] = 'w'
+s['l'] = 'h'
+s['m'] = 'u'
+s['n'] = 'x'
+s['o'] = 'a'
+s['p'] = 'z'
+s['q'] = 'j'
+s['r'] = 'r'
+s['s'] = 'y'
+s['t'] = 'c'
+s['u'] = 'v'
+s['v'] = 't'
+s['w'] = 'd'
+s['x'] = 'o'
+s['y'] = 'k'
+s['z'] = 'e'
+
+
+def substitutiongui():
+
+    
+def dbconnect():
+        
+connection = mysql.connector.connect(host='localhost', database='substitution', user='root', password='root')
+        
+return connection
+
+    
+
+def frequency():
+        
+import numpy as np
+        
+import matplotlib.pyplot as plt
+ 
+  
+        
+# creating the dataset
+        
+msg1 = msg.get(1.0, "end-1c")
+
+        
+if len(msg1) == 0:
+            
+messagebox.showerror("showinfo", "Type Message first")
+        
+else:
+            
+freq = {}
+            
+for c in s.keys():
+                
+i=0;
+               
+occ = 0
+                
+c1 = msg1.count(c)
+                
+freq[c] = c1
+                
+'''
+                
+while i < len(msg1):
+                    
+if msg1[i] == c:
+                        
+occ = occ + 1
+                
+freq[c] = occ        
+                
+'''    
+            
+courses = freq.keys()
+            
+values1 = freq.values()
+  
+            
+fig = plt.figure(figsize = (10, 5))
+ 
+            
+# creating the bar plot
+            
+plt.bar(courses, values1, color ='maroon',
+width = 0.4)
+ 
+            
+plt.xlabel("Characters")
+            
+plt.ylabel("Frequency")
+            
+plt.title("Frequency Graph")
+            
+plt.show()    
+
+
+    
+def encrypt():
+        
+msg1 = msg.get(1.0, "end-1c")
+
+        
+if len(msg1) == 0:
+            
+messagebox.showerror("showinfo", "Type Message first")
+        
+else:
+            
+i=0
+            
+cyp = ''
+            
+while i < len(msg1):
+                
+if msg1[i] in s.keys():
+                    
+cyp = cyp + s[msg1[i]]
+                
+else:
+                    
+cyp = cyp + msg1[i]
+                
+i = i + 1
+
+            
+msg.delete('1.0',END)
+            
+msg.insert(INSERT,cyp)
+        
+            
+connection = dbconnect()
+            
+cursor = connection.cursor()
+            
+cursor.execute('insert into substitutiondata values(%s, %s )', (msg1, cyp))
+            
+connection.commit()
+            
+cursor.close()
+            
+messagebox.showerror("showinfo", "Message successfully encrypted")
+        
+            
+        
+
+    
+def decrypt():
+        
+cyp = msg.get(1.0, "end-1c")
+
+        
+if len(cyp) == 0:
+            
+messagebox.showerror("showinfo", "There is no text to decrypt")
+        
+else:
+            
+i=0
+            
+msg1 = ''
+           
+while i < len(cyp):
+                
+if cyp[i] in s.keys():
+                    
+for t, v in s.items():
+                        
+if v == cyp[i]:
+                            
+msg1 = msg1 + t
+                            
+i = i + 1
+                            
+break
+                
+else:
+                    
+msg1 = msg1 + cyp[i]
+                    
+i = i + 1
+                    
+            
+msg.delete('1.0',END)        
+            
+msg.insert(INSERT,msg1)
+            
+messagebox.showerror("showinfo", "Message successfully decrypted")
+            
+    
+root.title("substitution technique")
+
+        
+    
+w2 = Label(root, justify=RIGHT, text="DATA SECURITY USING SUBSTITUTION METHOD", fg="red", width=80  ,height=1,font=('times', 15, 'bold'))
+    
+w2.place(x=50, y=10)
+        
+    
+lb1 = Label(root, height=1, width=20, text="Substitution Characters",fg="black", bg="cyan",font=('times', 15))
+    lb1.place(x=10,y=70)
+        
+    
+subtxt = tk.Text(root, height = 5, width = 60)
+    
+subtxt.place(x=300, y=70)
+
+    
+subs = ''
+    
+for c in s.keys():
+        
+subs = subs + c + '=' +s[c] + ', '
+    
+subtxt.insert(INSERT,subs)    
+           
+    
+lb4 = Label(root, height=1, width=20, text="Enter Message",fg="black", bg="cyan",font=('times', 15))
+    lb4.place(x=10,y=200)
+        
+    
+msg = tk.Text(root, height = 5, width = 60)
+    
+msg.place(x=300, y=200)
+
+    
+btngraph = tk.Button(root, text="Find Frequency",width=20, fg='red', bg='yellow', command=frequency)
+    btngraph.place(x=200, y=400)
+        
+    
+btn2 = tk.Button(root, text="Encrypt Message",width=20, fg='red', bg='yellow', command=encrypt)
+    btn2.place(x=400, y=400)
+
+    btn3 = tk.Button(root, text="Decrypt Message",width=20, fg='red', bg='yellow', command=decrypt)
+    
+btn3.place(x=600, y=400)
+       
+    
+root.geometry('1000x500')
+    
+root.mainloop()        
+
+
+
+substitutiongui()
+
+
